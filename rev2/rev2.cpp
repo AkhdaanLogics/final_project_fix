@@ -7,6 +7,7 @@ using namespace std;
 
 int pil;
 double totalHarga;
+string akun;
 
 void enqueue();
 void dequeue();
@@ -17,7 +18,7 @@ void halamanKasir();
 
 int main()
 {
-	string akun;
+	
 	do
 	{
 		cout << "Login Akun : ";
@@ -42,6 +43,7 @@ struct dataPesanan
 {
 	string nama;
 	int jmlSoto, jmlSotoKulit, jmlEsTeh, jmlEsJeruk;
+	dataPesanan* next;
 };
 
 struct queue
@@ -49,8 +51,6 @@ struct queue
 	dataPesanan data[max];
 	int head;
 	int tail;
-
-
 }antrian;
 
 bool kosong()
@@ -141,12 +141,8 @@ void dequeue()
 	dataPesanan dataPesanan[max];
 	if (!kosong())
 	{
-		for (int i = antrian.head; i < antrian.tail; i++)	
-		{
-			antrian.data[i] = antrian.data[i + 1];
-			antrian.tail--;
-			cout << "Pesanan telah atas nama " << dataPesanan[i].nama << " telah selesai!"  << endl;
-		}
+			cout << "Pesanan atas nama " << antrian.data[antrian.head].nama << " telah selesai!"  << endl;
+			antrian.head++;
 	}
 	else
 	{
@@ -163,6 +159,7 @@ void halamanKasir()
 		cout << "1. Masukkan pesanan" << endl;
 		cout << "2. Tampilkan pesanan" << endl;
 		cout << "3. Pesanan selesai" << endl;
+		cout << "4. Keluar" << endl;
 		cout << "Masukkan pilihan : ";
 		cin >> pil;
 		switch (pil)
@@ -176,22 +173,91 @@ void halamanKasir()
 		case 3:
 			dequeue();
 			break;
+		case 4:
+			do
+			{
+				cout << "Login Akun : ";
+				cin >> akun;
+				if (akun == "admin")
+				{
+					halamanAdmin();
+				}
+				else if (akun == "kasir")
+				{
+					halamanKasir();
+				}
+				else
+				{
+					cout << "Akun tidak ditemukan!";
+				}
+			} while (akun != "admin" && akun != "kasir");
+			break;
 		}
 	} while (pil != 4);
 }
 
 
-struct linkedList
+struct LinkedList 
 {
+	dataPesanan* head;
+	dataPesanan* tail;
+	int size;
+} list;
 
-};
+void initLinkedList() {
+	list.head = NULL;
+	list.tail = NULL;
+	list.size = 0;
+}
+
+bool kosongLinkedList() {
+	return list.size == 0;
+}
+
+void tampilDataLinkedList() {
+	if (!kosongLinkedList()) {
+
+		cout << "==== RIWAYAT PESANAN ====\n";
+		dataPesanan* current = list.head;
+		while (current != NULL) 
+		{
+			cout << "Nama pemesan : " << current->nama << endl;
+			cout << "Jumlah soto : " << current->jmlSoto << endl;
+			cout << "Jumlah soto kulit : " << current->jmlSotoKulit << endl;
+			cout << "Jumlah es teh : " << current->jmlEsTeh << endl;
+			cout << "Jumlah es jeruk : " << current->jmlEsJeruk << endl;
+			cout << "Total harga : " << totalHarga << endl;
+			cout << endl;
+			current = current->next;
+		}
+	}
+	else {
+
+		cout << "Data Kosong" << endl;
+	}
+}
 // Halaman Admin
 void halamanAdmin()
 {
-	cout << "==== HALAMAN ADMIN ====" << endl;
-	cout << "1. Tampilkan semua data" << endl;
-	cout << "2. Cari berdasarkan nama pemesan" << endl;
-	cout << "3. Urutkan berdasarkan total harga" << endl;
-	cout << "Masukkan pilihan : ";
-	cin >> pil;
+	do
+	{
+		cout << "==== HALAMAN ADMIN ====" << endl;
+		cout << "1. Tampilkan semua data" << endl;
+		cout << "2. Cari berdasarkan nama pemesan" << endl;
+		cout << "3. Urutkan berdasarkan total harga" << endl;
+		cout << "Masukkan pilihan : ";
+		cin >> pil;
+		switch (pil)
+		{
+		case 1:
+			tampilDataLinkedList();
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+
+		}
+	} while (pil != 4);
+
 }
